@@ -1,7 +1,7 @@
 version: "3.4"
 
 x-rnode: &default-rnode
-  image: rchain/rnode:latest
+  image: coop.rchain/rnode:latest
   user: root
   networks:
     - rchain-net
@@ -11,13 +11,15 @@ services:
     <<: *default-rnode
     container_name: rnode.boot
     ports:
-      - "40400-40404:40400-40404"
+      - "40401:40401"
+      - "40402:40402"
     deploy:
       resources:
         limits:
           memory: 2G
     command:
       [
+        "--grpc-max-message-size=10981767",
         "run",
         "-s",
         "--validator-private-key=$BOOTSTRAP_PRIVATE_KEY",
@@ -28,12 +30,14 @@ services:
         "--bonds-file=/var/lib/rnode/bonds.txt",
         "--fork-choice-stale-threshold=$FORK_CHOICE_STALE_THRESHOLD",
         "--fork-choice-check-if-stale-interval=$FORK_CHOICE_CHECK_IF_STALE_INTERVAL",
+        "--reporting"
       ]
     volumes:
       - ./wallets.txt:/var/lib/rnode/wallets.txt
       - ./bonds.txt:/var/lib/rnode/bonds.txt
       - ./node.certificate.pem:/var/lib/rnode/node.certificate.pem
       - ./node.key.pem:/var/lib/rnode/node.key.pem
+      - ./.local/single/data:/var/lib/rnode
 
 networks:
   rchain-net:

@@ -5,7 +5,7 @@ services:
     build: ./proposeImage
     command: ["--config", "/propose_config.yml"]
     volumes:
-      - ./nil.rho:/nil.rho
+      - ./transfer.rho:/transfer.rho
       - ./propose_config.yml:/propose_config.yml
     networks:
       - rchain-net

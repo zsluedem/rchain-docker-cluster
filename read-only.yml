@@ -1,13 +1,13 @@
 version: "3.3"
 services:
   readonly:
-    image: rchain/rnode:latest
+    image: coop.rchain/rnode:latest
     user: root
     networks:
       - rchain-net
     container_name: rnode.readonly
     ports:
-      - "40401:40401"
+      - "40403:40403"
     command:
       [
         "run",
@@ -18,7 +18,11 @@ services:
         "--synchrony-constraint-threshold=$SYNCHRONY_CONSTRAINT_THREDHOLD",
         "--fork-choice-stale-threshold=$FORK_CHOICE_STALE_THRESHOLD",
         "--fork-choice-check-if-stale-interval=$FORK_CHOICE_CHECK_IF_STALE_INTERVAL",
+        "--reporting",
+        "--fault-tolerance-threshold=-2.0"
       ]
+    volumes:
+      - ./.local/readonly/data:/var/lib/rnode
 
 networks:
   rchain-net:
